@@ -1,37 +1,57 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React, { useEffect, useState } from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import LoginScreen from './login';
+import CadastroScreen from './cadastro';
+import { Image, Text, StyleSheet, View } from 'react-native';
+import image1 from '../src/images/Twitch_icon_2012.svg.png';
+import { styles } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const Tab = createMaterialTopTabNavigator();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const navigation = useNavigation();
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+    const unsubscribe = navigation.addListener('state', (e) => {
+      const routeName = e.data.state.routes[e.data.state.index].name;
+      if (routeName === 'login') {
+        setTitle('Entrar na Twitch');
+      } else if (routeName === 'cadastro') {
+        setTitle('Junte-se hoje à Twitch');
+      }
+    });
+  
+    return unsubscribe;
+  }, [navigation]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <View style={{ flex: 1 }}>
+        <View style={styles.navbar}>
+            <Image style={styles.icon} source={image1}></Image>
+            <Text style={styles.titleNav}>{title}</Text>
+        </View>
+      <Tab.Navigator 
+      screenOptions={{
+        tabBarActiveTintColor: 'purple',
+        tabBarInactiveTintColor: 'gray', 
+        tabBarIndicatorStyle: { backgroundColor: 'purple' }, 
+        tabBarStyle: { backgroundColor: 'white' }, 
+      }}>
+        
+        <Tab.Screen 
+          name="login" 
+          component={LoginScreen}
+          options={{ tabBarLabel: 'Login' }}
+        />
+        <Tab.Screen 
+          name="cadastro" 
+          component={CadastroScreen}
+          options={{ tabBarLabel: 'Cadastro' }}
+        />
+      </Tab.Navigator>
+    </View>
   );
 }
+
