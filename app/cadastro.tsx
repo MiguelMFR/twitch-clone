@@ -64,7 +64,7 @@ const RegistrationScreen = () => {
         onFocus={() => setIsSecPasswordFocused(true)}
         onBlur={() => setIsSecPasswordFocused(false)}
         placeholder="Confirmação de senha"
-        secureTextEntry={!isPasswordVisible}
+        secureTextEntry={!isSecPasswordVisible}
       />
         <TouchableOpacity
           style={styles.eyeIcon}
