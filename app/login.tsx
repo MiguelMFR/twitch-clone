@@ -10,15 +10,12 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Adicione o logo da Twitch e os botões de navegação aqui */}
-      
       <Text style={styles.text}>Usuário</Text>
       <TextInput
         style={isUserFocused ? styles.inputFocused : styles.input}
         onFocus={() => setIsUserFocused(true)}
         onBlur={() => setIsUserFocused(false)}
         placeholder="Usuário"
-        // Adicione a lógica de onChangeText aqui
       />
 
       <Text style={styles.text}>Senha</Text>
